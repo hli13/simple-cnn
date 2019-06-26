@@ -1,88 +1,71 @@
-# Project Title
+# A Convolutional Neural Network with One Hidden Layer
 
-One Paragraph of project description goes here
+In this project, a convolutional neural network (CNN) with one hidden layer is implemented from scratch in Python. The model is trained using stocastic gradient descent (SGD) and evaluated on the MNIST dataset.
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-What things you need to install the software and how to install them
+## Dependencies
 
 ```
-Give examples
+numpy==1.16.4
+h5py==2.9.0
+matplotlib==3.1.0
 ```
 
-### Installing
+## Dataset
 
-A step by step series of examples that tell you how to get a development env running
+The [MNIST](http://yann.lecun.com/exdb/mnist/) dataset is used to train and evaluate the neural network model in this project. It is a database of handwritten digits that is commonly used to train image processing models. The dataset in hdf5 format is included in the repository.
 
-Say what the step will be
+## Implementation
 
-```
-Give the example
-```
+#### Activation functions
 
-And repeat
+Rectified Linear Unit (ReLU) is defined as the activation function in this project. The evaluation of the function itself and its derivative are implemented as follow.
 
-```
-until finished
+```python
+TBD
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+#### Softmax function
 
-## Running the tests
+The softmax function is applied in the output layer of the neural network.
+```python
+def softmax_function(z):
+    """
+    Softmax function
 
-Explain how to run the automated tests for this system
+    Parameters
+    ----------
+    z : ndarray of float
+        input
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+    Returns
+    -------
+    ZZ : ndarray of float
+        output
+    """
+    ZZ = np.exp(z)/np.sum(np.exp(z))
+    return ZZ
 ```
-Give an example
+
+#### Forward propagation
+
+```python
+TBD
 ```
 
-### And coding style tests
+#### Backpropagation
 
-Explain what these tests test and why
-
-```
-Give an example
+```python
+TBD
 ```
 
-## Deployment
+## Hyerparameters
 
-Add additional notes about how to deploy this on a live system
+TBD
 
-## Built With
+## Running the model
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+TBD
 
-## Contributing
+## Result
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
-
+TBD
