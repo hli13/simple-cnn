@@ -39,3 +39,7 @@ Thumbs.db
 # Document files #
 ##################
 *.pdf
+
+# Python files #
+################
+*.pyc
