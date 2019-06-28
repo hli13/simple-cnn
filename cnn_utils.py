@@ -84,9 +84,8 @@ def parse_params():
                         help='number of channels (default: 3)')
     parser.add_argument('--sigma', type=str, default='relu',
                         help='type of activation function (default: relu)')
-    parser.add_argument('--quicktest', type=bool, default=True,
-                        help='whether or not to perform a quick test of the \
-                        pipeline (default: False)')
+    parser.add_argument('--quicktest', action='store_true',
+                        help='perform a quick test of the pipeline')
     params = parser.parse_args()
     
     # modify parameters for a quick test
