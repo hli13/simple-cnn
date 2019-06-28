@@ -12,6 +12,7 @@ import copy
 from random import randint
 import sys
 
+
 def load_mnist(mnist_dir):
     """
     Load the MNIST dataset
@@ -35,13 +36,21 @@ def load_mnist(mnist_dir):
     mnist['y_test'] = np.int32( np.array( MNIST_data['y_test'][:,0] ) )
     MNIST_data.close()
     
-    # TODO: pre-specify MNIST data info; read the data; consistency check
-    mnist['n_train'] = mnist['x_train'].shape[0] # 60000
-    mnist['n_test'] = mnist['x_test'].shape[0] # 10000
-    mnist['n_input'] = mnist['x_train'].shape[1] # image size 28*28=784
-    mnist['input_x'] = 28
-    mnist['input_y'] = 28
-    mnist['n_output'] = len(np.unique(mnist['y_test'])) # num of labels = 10
+    mnist['n_train'] = 60000 # number of training samples
+    mnist['n_test'] = 10000 # number of test samples
+    mnist['input_x'] = 28 # input x-dimension
+    mnist['input_y'] = 28 # input y-dimension
+    mnist['n_input'] = mnist['input_x']*mnist['input_y'] # input dimension
+    mnist['n_output'] = 10 # output dimension, number of labels
+    
+    assert (mnist['x_train'].shape[0] == mnist['n_train']), \
+            "Wrong number of training samples!"
+    assert (mnist['x_test'].shape[0] == mnist['n_test']), \
+            "Wrong number of test samples!"
+    assert (mnist['x_train'].shape[1] == mnist['n_input']), \
+            "Wrong dimension of inputs!"
+    assert (len(np.unique(mnist['y_test'])) == mnist['n_output']), \
+            "Wrong dimension of outputs!"
     
     # print data info
     print("\nMNIST data info")
@@ -53,6 +62,7 @@ def load_mnist(mnist_dir):
     print("Output data shape : %d" % mnist['n_output'])
     
     return mnist
+
 
 def parse_params():
     """
@@ -107,6 +117,7 @@ def parse_params():
 
     return params
 
+
 def init_model(mnist, params):
     """
     Initialize neural network model
@@ -125,18 +136,21 @@ def init_model(mnist, params):
     model_grads : dict
         gradients of the parameters/weights of the nerual network
     """
-    # TODO: pre-specify dimensions with shorter variable names
+    dout = mnist['n_output'] # output dimension, i.e., number of labels
+    dx = mnist['input_x'] # input x-dimension
+    dy = mnist['input_y'] # input y-dimension
+    kx = params.k_x # kernel x-dimension
+    ky = params.k_y # kernel y-dimension
+    nc = params.n_ch # number of channels
+    
     model = {}
-    model['W'] = np.random.randn(mnist['n_output'],
-                                 mnist['input_y']-params.k_y+1,
-                                 mnist['input_x']-params.k_x+1,
-                                 params.n_ch) / np.sqrt(mnist['n_input'])
-    model['K'] = np.random.randn(params.k_y,
-                                 params.k_x,
-                                 params.n_ch) / np.sqrt(params.k_y*params.k_x)
-    model['b'] = np.random.randn(mnist['n_output']) / np.sqrt(mnist['n_output'])
+    model['W'] = np.random.randn(dout, dy-ky+1, dx-kx+1, nc) / np.sqrt(dx*dy)
+    model['K'] = np.random.randn(ky, kx, nc) / np.sqrt(ky*kx)
+    model['b'] = np.random.randn(dout) / np.sqrt(dout)
     model_grads = copy.deepcopy(model)
+    
     return (model, model_grads)
+
 
 def sigma(z, func):
     """
@@ -164,6 +178,7 @@ def sigma(z, func):
         sys.exit("Unsupported function type!")
     return ZZ
 
+
 def d_sigma(z, func):
     """
     Derivative of activation functions
@@ -190,6 +205,7 @@ def d_sigma(z, func):
         sys.exit("Unsupported function type!")
     return dZZ
 
+
 def softmax_function(z):
     """
     Softmax function
@@ -206,6 +222,7 @@ def softmax_function(z):
     """
     ZZ = np.exp(z)/np.sum(np.exp(z))
     return ZZ
+
 
 def conv(A,B):
     """
@@ -226,18 +243,15 @@ def conv(A,B):
     ZZ : ndarray of float
         output
     """
-    # TODO: optimize, avoid using loops
-    dy = A.shape[0] # y-dim of input
-    dx = A.shape[1] # x-dim of input
-    ky = B.shape[0] # y-dim of kernel
-    kx = B.shape[1] # x-dim of kernel
-    C = B.shape[2]  # number of channels
+    dy, dx = A.shape # y-dim and x-dim of input
+    ky, kx, C = B.shape # y-dim, x-dim, and num of channels of kernel
     ZZ = np.zeros((dy-ky+1,dx-kx+1,C))
     for p in range(C):
         for i in range(dy-ky+1):
             for j in range(dx-kx+1):
                 ZZ[i,j,p] = np.sum(np.multiply(B[:,:,p],A[i:i+ky,j:j+kx]))
     return ZZ
+
 
 def forward(X, model, func):
     """
@@ -255,13 +269,12 @@ def forward(X, model, func):
     Returns
     -------
     Z : ndarray of float
-        output of the linear layer
+        output of the convolution layer
     H : ndarray of float
         output after the activation
     f : ndarray of float
         output of the forward propagation
     """
-    # TODO: optimize, avoid using loops
     Z = conv(X,model['K'])
     H = sigma(Z,func)
     U = np.zeros(model['W'].shape[0])
@@ -269,6 +282,7 @@ def forward(X, model, func):
         U[k] = np.sum(np.multiply(model['W'][k,:,:,:],H))
     f = softmax_function(U)
     return (Z, H, f)
+
 
 def backprop(X, y, f, Z, H, model, model_grads, func):
     """
@@ -283,7 +297,7 @@ def backprop(X, y, f, Z, H, model, model_grads, func):
     f : ndarray of float
         output of the forward propagation
     Z : ndarray of float
-        output of the linear layer
+        output of the convolution layer
     H : ndarray of float
         output after the activation
     model : dict
@@ -298,7 +312,6 @@ def backprop(X, y, f, Z, H, model, model_grads, func):
     model_grads : dict
         updated gradients of the parameters/weights of the nerual network
     """
-    # TODO: optimize, avoid using loops
     dU = - 1.0*f
     dU[y] = dU[y] + 1.0
     db = dU
@@ -317,6 +330,7 @@ def backprop(X, y, f, Z, H, model, model_grads, func):
     model_grads['K'] = dK
     model_grads['b'] = db      
     return model_grads
+
 
 def plot_predict(x, y, pred):
     """
@@ -408,6 +422,7 @@ def cnn_train(model, model_grads, params, mnist):
               ( epochs, total_correct/np.float(mnist['n_train'] ) ) )
         
     return model
+
 
 def cnn_test(model, params, mnist):
     """

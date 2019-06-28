@@ -7,8 +7,8 @@ Pipeline for training and evaluating a convolutional neural network on the MNIST
 import time
 import cnn_utils
 
-def main():
 
+def main():
     # parse arguments/hyperparameters
     params = cnn_utils.parse_params()
     
@@ -31,6 +31,7 @@ def main():
     print("\nStart testing")
     print("--------------")
     cnn_utils.cnn_test(model, params, mnist)
+
     
 if __name__ == "__main__":
     main()
