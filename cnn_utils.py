@@ -11,6 +11,7 @@ import argparse
 import copy
 from random import randint
 import sys
+import os
 
 
 def load_mnist(mnist_dir):
@@ -332,7 +333,7 @@ def backprop(X, y, f, Z, H, model, model_grads, func):
     return model_grads
 
 
-def plot_predict(x, y, pred):
+def plot_predict(x, y, pred, idx):
     """
     Plot and display the test figure and prediction
     
@@ -355,7 +356,16 @@ def plot_predict(x, y, pred):
     plt.axis('off')
     plt.title("Truth: %d    Predict: %d" % (y, pred))
     plt.imshow(x)
-    plt.show()
+    #plt.show()
+    
+    # save the figures
+    fig_path = "./figs/img_" + str(idx) + ".png"
+    figs_dir = os.path.dirname(fig_path)
+    if not os.path.exists(figs_dir):
+        os.makedirs(figs_dir)
+    if os.path.isfile(fig_path):
+        os.remove(fig_path)
+    plt.savefig(fig_path)
     
 
 def cnn_train(model, model_grads, params, mnist):
@@ -467,12 +477,12 @@ def cnn_test(model, params, mnist):
             total_correct += 1
             # display the first k correct predictions
             if (count_correct < k and params.quicktest == False):
-                plot_predict(x, y, prediction)
+                plot_predict(x, y, prediction, n)
                 count_correct += 1
         
         # display the first k incorrect predictions
         if (prediction != y and count_wrong < k and params.quicktest == False):
-            plot_predict(x, y, prediction)
+            plot_predict(x, y, prediction, n)
             count_wrong += 1
             
     print("Test Accuracy : %6.4f" % 
