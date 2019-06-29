@@ -243,6 +243,9 @@ def conv(A,B):
     -------
     ZZ : ndarray of float
         output
+        shape = (x_dim_of_input - x_dim_of_kernel + 1) *
+                (y_dim_of_input - y_dim_of_kernel + 1) *
+                n_channels
     """
     dy, dx = A.shape # y-dim and x-dim of input
     ky, kx, C = B.shape # y-dim, x-dim, and num of channels of kernel
@@ -329,7 +332,7 @@ def backprop(X, y, f, Z, H, model, model_grads, func):
     dK = conv(X,dZZ_delta)
     model_grads['W'] = dW
     model_grads['K'] = dK
-    model_grads['b'] = db      
+    model_grads['b'] = db
     return model_grads
 
 
