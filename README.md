@@ -262,4 +262,57 @@ python main.py --help
 
 ## Result
 
-TBD
+With the default hyperparameters, the training and evaluation results are as follow.
+
+```
+Hyperparameters
+-----------------
+Initial learning rate : 0.0100
+Learning rate decay : 0.1000
+Staircase learning rate decay interval : 5
+Number of epochs : 10
+Kernal size : 3 x 3
+Number of channels : 3
+Activation function : relu
+
+MNIST data info
+----------------
+Number of training data : 60000
+Number of test data : 10000
+Input data shape : 28 x 28 = 784
+Output data shape : 10
+
+Start training
+---------------
+Epoch   0,  Accuracy 0.9365
+Epoch   1,  Accuracy 0.9659
+Epoch   2,  Accuracy 0.9712
+Epoch   3,  Accuracy 0.9751
+Epoch   4,  Accuracy 0.9758
+Epoch   5,  Accuracy 0.9845
+Epoch   6,  Accuracy 0.9874
+Epoch   7,  Accuracy 0.9887
+Epoch   8,  Accuracy 0.9886
+Epoch   9,  Accuracy 0.9893
+Training Time : 6140.6342 (s)
+
+Start testing
+--------------
+Test Accuracy : 0.9734
+```
+
+Examples of correctly predicted images
+
+![img_correct_1](./figs/correct_1.png)
+![img_correct_2](./figs/correct_2.png)
+![img_correct_3](./figs/correct_3.png)
+![img_correct_4](./figs/correct_4.png)
+![img_correct_5](./figs/correct_5.png)
+
+Examples of *incorrectly* predicted images
+
+![img_incorrect_1](./figs/incorrect_1.png)
+![img_incorrect_2](./figs/incorrect_2.png)
+![img_incorrect_3](./figs/incorrect_3.png)
+![img_incorrect_4](./figs/incorrect_4.png)
+![img_incorrect_5](./figs/incorrect_5.png)
